@@ -45,18 +45,24 @@ public class ShoppingBasket {
 
         calculateBreadOffer();
 
-        double applesSaving = items.stream().filter(e -> e.description.equalsIgnoreCase("Apples")).mapToDouble(e -> {
-            BigDecimal saving = e.price.divide(new BigDecimal(100)).multiply(new BigDecimal(10));
-
-            e.price = e.price.subtract(saving);
-            return saving.doubleValue();
-        }).sum();
-
-        System.out.println("Apples offer: " + new BigDecimal(applesSaving).setScale(2,BigDecimal.ROUND_HALF_UP));
+        calculateAppleOffer();
 
         total = new BigDecimal(items.stream().mapToDouble(e -> e.price.doubleValue()).sum());
 
         System.out.println("Total : " + total.setScale(2,BigDecimal.ROUND_HALF_UP));
+    }
+
+    private void calculateAppleOffer() {
+        if(items.stream().anyMatch(e -> e.getDescription().equalsIgnoreCase("apples"))){
+            double applesSaving = items.stream().filter(e -> e.description.equalsIgnoreCase("Apples")).mapToDouble(e -> {
+                BigDecimal saving = e.price.divide(new BigDecimal(100)).multiply(new BigDecimal(10));
+
+                e.price = e.price.subtract(saving);
+                return saving.doubleValue();
+            }).sum();
+
+            System.out.println("Apples offer: " + new BigDecimal(applesSaving).setScale(2,BigDecimal.ROUND_HALF_UP));
+        }
     }
 
     private void calculateBreadOffer() {
